@@ -1,56 +1,31 @@
-import 'dart:math';
+import 'package:flutter/material.dart';
 
-import 'package:flutter/cupertino.dart';
+void main() => runApp(const AppRoot());
 
-class HomeWidget extends StatelessWidget {
-
-  // Constructor
-  const HomeWidget({Key? key}) : super(key: key);
+class AppRoot extends StatelessWidget {
+  const AppRoot({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError();
-  }
-}
-
-class HomeStatelessWidget extends StatefulWidget {
-  const HomeStatelessWidget({super.key});
-
-  @override
-  State<HomeStatelessWidget> createState() => _HomeStatelessWidgetState();
-}
-
-class _HomeStatelessWidgetState extends State<HomeStatelessWidget> {
-
-  Color containerColor = const Color.fromARGB(255, 250, 200, 50);
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void changeContainerColor() {
-    setState(() {
-      Random rand = Random();
-      containerColor = Color.fromARGB(255, rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: changeContainerColor,
-
-      child: Container (
-        color: containerColor,
+    return MaterialApp(
+      theme: ThemeData.light(),
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        appBar: AppBar(title: const Text("Hello World App!")),
+        body: Center(child: AppTree())
       ),
     );
   }
+
 }
 
-void main() => runApp(const HomeStatelessWidget());
+class AppTree extends StatelessWidget {
+  const AppTree({super.key});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("Content");
+  }
+
+}
