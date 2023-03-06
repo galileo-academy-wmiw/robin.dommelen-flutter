@@ -10,59 +10,55 @@ class AppRoot extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(title: const Text("Hello World App!")),
-          body: TabBarView(
-            children: [
-              ScreenRed(), ScreenGreen(), ScreenBlue()
-            ],
-          ),
-          bottomNavigationBar: TabBar(
-            labelColor: Colors.black,
-            tabs: [
-              Tab(icon: Icon(Icons.home), text: "Red",),
-              Tab(icon: Icon(Icons.abc), text: "Green"),
-              Tab(icon: Icon(Icons.access_alarm), text: "Blue")
-            ]
-          ),
-        ),
+      home: AppTree(),
+    );
+  }
+}
+
+class AppTree extends StatelessWidget {
+  const AppTree({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+          title: Text("My App"),
+          backgroundColor: Colors.deepOrange,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: Icon(Icons.arrow_forward),
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Page2())
+            );},
+        )
       ),
     );
   }
-
 }
 
-class ScreenRed extends StatelessWidget {
-  const ScreenRed({super.key});
-
+class Page2 extends StatelessWidget {
+  const Page2({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(color: Colors.red,);
+    return Scaffold(
+      backgroundColor: Colors.redAccent,
+      appBar: AppBar(
+        title: Text("Another Page"),
+        backgroundColor: Colors.blue,
+      ),
+      body: Center(
+          child: ElevatedButton(
+            child: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          )
+      ),
+    );
   }
-
 }
 
-class ScreenBlue extends StatelessWidget {
-  const ScreenBlue({super.key});
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(color: Colors.blue,);
-  }
-
-}
-
-class ScreenGreen extends StatelessWidget {
-  const ScreenGreen({super.key});
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(color: Colors.green,);
-  }
-
-}
