@@ -10,7 +10,7 @@ class AppRoot extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
-      home: AppTree(),
+      home: Scaffold(appBar: AppBar(title: const Text("Hello World App!")), body: Center(child: AppTree())),
     );
   }
 }
@@ -20,45 +20,6 @@ class AppTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text("My App"),
-          backgroundColor: Colors.deepOrange,
-      ),
-      body: Center(
-        child: ElevatedButton(
-          child: Icon(Icons.arrow_forward),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Page2())
-            );},
-        )
-      ),
-    );
+    return Image.asset("assets/bark.jpg", width: 200, height: 200, fit: BoxFit.fill,);
   }
 }
-
-class Page2 extends StatelessWidget {
-  const Page2({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.redAccent,
-      appBar: AppBar(
-        title: Text("Another Page"),
-        backgroundColor: Colors.blue,
-      ),
-      body: Center(
-          child: ElevatedButton(
-            child: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          )
-      ),
-    );
-  }
-}
-
