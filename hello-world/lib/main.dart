@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:audioplayers/audioplayers.dart';
+
+final AudioPlayer audioPlayer = AudioPlayer();
 
 void main() => runApp(const AppRoot());
 
@@ -20,6 +23,6 @@ class AppTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset("assets/bark.jpg", width: 200, height: 200, fit: BoxFit.fill,);
+    return ElevatedButton(onPressed: () {audioPlayer.play(AssetSource("waterfall.mp3"));}, child: Text("Play Me!"));
   }
 }
