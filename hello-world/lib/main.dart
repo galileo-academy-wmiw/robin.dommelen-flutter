@@ -1,14 +1,9 @@
+import 'dart:async';
+import "library.dart" as lib;
+
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:video_player/video_player.dart';
-
-const TextStyle blueText = TextStyle(
-  color: Colors.blue,
-  fontFamily: "TiltWarp",
-  letterSpacing: 1.2,
-  fontSize: 14,
-  fontWeight: FontWeight.bold,
-);
 
 const List<DropdownMenuItem<int>> listOptions = [
   DropdownMenuItem(child: Text("Large"), value: 200,),
@@ -18,13 +13,19 @@ const List<DropdownMenuItem<int>> listOptions = [
 
 final AudioPlayer audioPlayer = AudioPlayer();
 
-void main() => runApp(const AppRoot());
+void main() => runApp(MyInherited(child: const AppRoot()));
 
 class AppRoot extends StatelessWidget {
   const AppRoot({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    lib.textStream.add("This is the first text!");
+    Timer(Duration(seconds: 2), () {
+      lib.textStream.add("This is the second text!");
+    });
+
     return MaterialApp(
       theme: ThemeData.light(),
       debugShowCheckedModeBanner: false,
@@ -41,10 +42,26 @@ class AppTree extends StatefulWidget {
 
 class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
 
+  String _textOnScreen = "";
+
   @override
   void initState() {
     super.initState();
 
+    lib.textStream.stream.listen((text) {
+      setState(() {
+        _textOnScreen = text;
+      });
+    });
+
+    Timer(Duration(seconds: 3), () {
+      setState(() {
+        MyInherited.of(context).blueText = TextStyle(
+          color: Colors.red,
+          fontSize: 40
+        );
+      });
+    });
   }
 
   @override
@@ -54,49 +71,42 @@ class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return Column(
       children: [
-        RouteMap(Icons.directions_walk, "A-B"),
-        RouteMap(Icons.directions_bike, "A-C"),
+        Container(
+          child: Text("Hello World", style: MyInherited.of(context).blueText),
+        ),
+        Container(
+          child: Text(_textOnScreen, style: lib.testStyle),
+        ),
       ],
     );
   }
 }
 
-class RouteMap extends StatelessWidget {
-  final IconData _icon;
-  final String _text;
+class MyInherited extends InheritedWidget {
+  MyInherited({
+    Key? key,
+    required Widget child,
+  }) : super(key: key, child: child);
 
-  RouteMap(this._icon, this._text);
+  static MyInherited of(BuildContext context) {
+    final MyInherited? result = context.dependOnInheritedWidgetOfExactType<MyInherited>();
+    assert(result != null, 'No MyInherited found in context');
+    return result!;
+  }
 
   @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(this._text),
-      background: Container(color: Colors.red),
-      child: Card(
-          child: Column(
-              children: [
-                ListTile(
-                  leading: Icon(_icon),
-                  title: Text(_text),
-                ),
-                ButtonBar(
-                  children: [
-                    TextButton(
-                      child: Text("Bekijk route"),
-                      onPressed: () {},
-                    ),
-                    TextButton(
-                        onPressed: () {},
-                        child: Text("Hoogtepunten")
-                    )
-                  ],
-                )
-              ]
-          )
-      ),
-    );
+  bool updateShouldNotify(MyInherited old) {
+    return true;
   }
-}
 
+  TextStyle blueText = TextStyle(
+    color: Colors.blue,
+    fontFamily: "TiltWarp",
+    letterSpacing: 1.2,
+    fontSize: 14,
+    fontWeight: FontWeight.bold,
+  );
+
+}
