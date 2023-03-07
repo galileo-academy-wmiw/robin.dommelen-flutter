@@ -2,6 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:video_player/video_player.dart';
 
+const TextStyle blueText = TextStyle(
+  color: Colors.blue,
+  fontFamily: "TiltWarp",
+  letterSpacing: 1.2,
+  fontSize: 14,
+  fontWeight: FontWeight.bold,
+);
+
 final AudioPlayer audioPlayer = AudioPlayer();
 
 void main() => runApp(const AppRoot());
@@ -19,39 +27,30 @@ class AppRoot extends StatelessWidget {
   }
 }
 
-class AppTree extends StatefulWidget {
-
-  @override
-  State<AppTree> createState() => _AppTreeState();
-}
-
-class _AppTreeState extends State<AppTree> {
-  final VideoPlayerController vpc = VideoPlayerController.asset("assets/video.mp4");
-
-  @override
-  void initState() {
-    super.initState();
-    vpc.initialize();
-    vpc.setVolume(0);
-  }
+class AppTree extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
       children: [
-        AspectRatio(aspectRatio: 1280 / 720, child: VideoPlayer(vpc)),
-        ElevatedButton(
-            onPressed: () {
-              setState(() {
-                if(vpc.value.isPlaying) {
-                  vpc.pause();
-                }
-                else {
-                  vpc.play();
-                }
-              });
-            },
-            child: vpc.value.isPlaying ? Text("pause") : Text("play")),
+        Container(
+          color: Colors.red,
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Hello world!", style: blueText, textScaleFactor: 1.5,),
+        ),
+        Container(
+          child: RichText(
+            textScaleFactor: 2,
+            text: TextSpan(
+              text: "green",
+              style: TextStyle(color: Colors.green),
+              children: <TextSpan>[
+                TextSpan(text: "blue", style: TextStyle(color: Colors.blue)),
+                TextSpan(text: "red", style: TextStyle(color: Colors.red))
+            ]
+            ),
+          )
+        ),
       ],
     );
   }
