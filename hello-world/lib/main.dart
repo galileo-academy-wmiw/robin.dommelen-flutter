@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:video_player/video_player.dart';
 
 final AudioPlayer audioPlayer = AudioPlayer();
 
@@ -18,11 +19,40 @@ class AppRoot extends StatelessWidget {
   }
 }
 
-class AppTree extends StatelessWidget {
-  const AppTree({super.key});
+class AppTree extends StatefulWidget {
+
+  @override
+  State<AppTree> createState() => _AppTreeState();
+}
+
+class _AppTreeState extends State<AppTree> {
+  final VideoPlayerController vpc = VideoPlayerController.asset("assets/video.mp4");
+
+  @override
+  void initState() {
+    super.initState();
+    vpc.initialize();
+    vpc.setVolume(0);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(onPressed: () {audioPlayer.play(AssetSource("waterfall.mp3"));}, child: Text("Play Me!"));
+    return Stack(
+      children: [
+        AspectRatio(aspectRatio: 1280 / 720, child: VideoPlayer(vpc)),
+        ElevatedButton(
+            onPressed: () {
+              setState(() {
+                if(vpc.value.isPlaying) {
+                  vpc.pause();
+                }
+                else {
+                  vpc.play();
+                }
+              });
+            },
+            child: vpc.value.isPlaying ? Text("pause") : Text("play")),
+      ],
+    );
   }
 }
