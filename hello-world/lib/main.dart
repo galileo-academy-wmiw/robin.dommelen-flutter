@@ -10,6 +10,12 @@ const TextStyle blueText = TextStyle(
   fontWeight: FontWeight.bold,
 );
 
+const List<DropdownMenuItem<int>> listOptions = [
+  DropdownMenuItem(child: Text("Large"), value: 200,),
+  DropdownMenuItem(child: Text("Medium"), value: 100,),
+  DropdownMenuItem(child: Text("Small"), value: 50,),
+];
+
 final AudioPlayer audioPlayer = AudioPlayer();
 
 void main() => runApp(const AppRoot());
@@ -36,27 +42,84 @@ class AppTree extends StatefulWidget {
 class _AppTreeState extends State<AppTree> {
 
   double _size = 100;
+  int? _dropdownValue = 100;
+  bool show = true;
 
   @override
   Widget build(BuildContext context) {
+
     return Column(
       children: [
-        ElevatedButton(onPressed: () {
-          setState(() {
-            _size += 10;
-          });
-        }, child: Icon(Icons.add_circle_outline, size: 50)),
-        Container(
-          margin: EdgeInsets.symmetric(vertical: 30),
-          width: _size,
-          height: _size,
-          color: Colors.teal,
+        Checkbox(
+            value: show,
+            onChanged: (value) {
+              print(show);
+              setState(() {
+                show = !show;
+              });
+            }
         ),
-        ElevatedButton(onPressed: () {
-          setState(() {
-            _size -= 10;
-          });
-        }, child: Icon(Icons.remove_circle_outline, size: 50)),
+        Switch(
+            value: show,
+            onChanged: (value) {
+              print(show);
+              setState(() {
+                show = !show;
+              });
+            }
+        ),
+        Radio(
+          value: false,
+          groupValue: show,
+          onChanged: (value) {
+            setState(() {
+              show = false;
+            });
+          },
+        ),
+        Radio(
+          value: true,
+          groupValue: show,
+          onChanged: (value) {
+            setState(() {
+              show = true;
+            });
+          },
+        ),
+        Slider.adaptive(
+            value: _size,
+            min: 50,
+            max: 200,
+            onChanged: (value) {
+              setState(() {
+                _size = value;
+              });
+            },
+          ),
+        DropdownButton(
+            items: listOptions,
+            value: _dropdownValue,
+            onChanged: (value) {
+              setState(() {
+                _size = value!.toDouble();
+                _dropdownValue = value;
+              });
+            }
+        ),
+        Visibility(visible: show,
+            child: FlutterLogo(size: _size)
+        ),
+        TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.red,
+            border: InputBorder.none,
+            hintText: "Text input please"
+          ),
+          onChanged: (text) {
+            print("Text: $text");
+          },
+        )
       ],
     );
   }
