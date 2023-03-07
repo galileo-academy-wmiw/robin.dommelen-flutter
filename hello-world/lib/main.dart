@@ -27,30 +27,36 @@ class AppRoot extends StatelessWidget {
   }
 }
 
-class AppTree extends StatelessWidget {
+class AppTree extends StatefulWidget {
+
+  @override
+  State<AppTree> createState() => _AppTreeState();
+}
+
+class _AppTreeState extends State<AppTree> {
+
+  double _size = 100;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
+        ElevatedButton(onPressed: () {
+          setState(() {
+            _size += 10;
+          });
+        }, child: Icon(Icons.add_circle_outline, size: 50)),
         Container(
-          color: Colors.red,
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Hello world!", style: blueText, textScaleFactor: 1.5,),
+          margin: EdgeInsets.symmetric(vertical: 30),
+          width: _size,
+          height: _size,
+          color: Colors.teal,
         ),
-        Container(
-          child: RichText(
-            textScaleFactor: 2,
-            text: TextSpan(
-              text: "green",
-              style: TextStyle(color: Colors.green),
-              children: <TextSpan>[
-                TextSpan(text: "blue", style: TextStyle(color: Colors.blue)),
-                TextSpan(text: "red", style: TextStyle(color: Colors.red))
-            ]
-            ),
-          )
-        ),
+        ElevatedButton(onPressed: () {
+          setState(() {
+            _size -= 10;
+          });
+        }, child: Icon(Icons.remove_circle_outline, size: 50)),
       ],
     );
   }
