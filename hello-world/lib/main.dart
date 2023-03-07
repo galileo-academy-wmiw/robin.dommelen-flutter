@@ -39,88 +39,72 @@ class AppTree extends StatefulWidget {
   State<AppTree> createState() => _AppTreeState();
 }
 
-class _AppTreeState extends State<AppTree> {
+class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
 
-  double _size = 100;
-  int? _dropdownValue = 100;
-  bool show = true;
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+        vsync: this,
+        duration: const Duration(seconds: 2)
+    );
+
+    _animation = Tween<double>(begin: 0, end: 6).animate(_animationController);
+    _animation.addListener(() {
+      setState(() {});
+    });
+
+    _animation.addStatusListener((status) {
+      if(status == AnimationStatus.completed)
+        _animationController.reverse();
+      else if(status == AnimationStatus.dismissed)
+        _animationController.forward();
+    });
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _animationController.dispose();
+  }
+
+  Color v_color = Colors.yellow;
+  double v_width = 200;
+  double v_height = 100;
 
   @override
   Widget build(BuildContext context) {
 
-    return Column(
-      children: [
-        Checkbox(
-            value: show,
-            onChanged: (value) {
-              print(show);
-              setState(() {
-                show = !show;
-              });
+    return Center(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            if(v_width == 200) {
+              v_color = Colors.amber;
+              v_width = 100;
+              v_height = 200;
             }
-        ),
-        Switch(
-            value: show,
-            onChanged: (value) {
-              print(show);
-              setState(() {
-                show = !show;
-              });
+            else {
+              v_color = Colors.yellow;
+              v_width = 200;
+              v_height = 100;
             }
+
+          });
+        },
+        child: AnimatedContainer(
+          duration: Duration(seconds: 1),
+          width: v_width,
+          height: v_height,
+          color: v_color,
         ),
-        Radio(
-          value: false,
-          groupValue: show,
-          onChanged: (value) {
-            setState(() {
-              show = false;
-            });
-          },
-        ),
-        Radio(
-          value: true,
-          groupValue: show,
-          onChanged: (value) {
-            setState(() {
-              show = true;
-            });
-          },
-        ),
-        Slider.adaptive(
-            value: _size,
-            min: 50,
-            max: 200,
-            onChanged: (value) {
-              setState(() {
-                _size = value;
-              });
-            },
-          ),
-        DropdownButton(
-            items: listOptions,
-            value: _dropdownValue,
-            onChanged: (value) {
-              setState(() {
-                _size = value!.toDouble();
-                _dropdownValue = value;
-              });
-            }
-        ),
-        Visibility(visible: show,
-            child: FlutterLogo(size: _size)
-        ),
-        TextField(
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.red,
-            border: InputBorder.none,
-            hintText: "Text input please"
-          ),
-          onChanged: (text) {
-            print("Text: $text");
-          },
-        )
-      ],
+      )
     );
   }
 }
