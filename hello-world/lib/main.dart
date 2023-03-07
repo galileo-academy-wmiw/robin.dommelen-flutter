@@ -33,6 +33,42 @@ class AppRoot extends StatelessWidget {
   }
 }
 
+class PainterTest extends CustomPainter {
+
+  final double _startAngle;
+
+  PainterTest(this._startAngle);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    Rect rect = Rect.fromLTWH(0, 0, size.width, size.height);
+
+    Path path = Path();
+    path.lineTo(0, size.height);
+    path.lineTo(size.width, 0);
+    path.close();
+
+    var center = Offset(size.width / 2, size.height / 2);
+
+    final Paint paint = Paint();
+
+    paint.color = Colors.blue;
+    canvas.drawArc(rect, _startAngle, 0.14, true, paint);
+
+    //paint.color = Colors.yellow;
+    //canvas.drawPath(path, paint);
+
+    //paint.color = Colors.red;
+    //canvas.drawCircle(center, 200, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
+  }
+
+}
+
 class AppTree extends StatefulWidget {
 
   @override
@@ -40,6 +76,10 @@ class AppTree extends StatefulWidget {
 }
 
 class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
+
+  Color v_color = Colors.yellow;
+  double v_width = 200;
+  double v_height = 100;
 
   late Animation<double> _animation;
   late AnimationController _animationController;
@@ -50,22 +90,16 @@ class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
 
     _animationController = AnimationController(
         vsync: this,
-        duration: const Duration(seconds: 2)
+      duration: const Duration(seconds: 2),
     );
 
-    _animation = Tween<double>(begin: 0, end: 6).animate(_animationController);
-    _animation.addListener(() {
-      setState(() {});
-    });
-
-    _animation.addStatusListener((status) {
-      if(status == AnimationStatus.completed)
-        _animationController.reverse();
-      else if(status == AnimationStatus.dismissed)
-        _animationController.forward();
-    });
+    _animation = Tween(begin: 0.0, end: 6.28).animate(_animationController);
+    _animation.addListener(() { setState(() {}); });
 
     _animationController.forward();
+    _animation.addStatusListener((status) {
+      if(status == AnimationStatus.completed) _animationController.repeat();
+    });
   }
 
   @override
@@ -74,37 +108,12 @@ class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
     _animationController.dispose();
   }
 
-  Color v_color = Colors.yellow;
-  double v_width = 200;
-  double v_height = 100;
-
   @override
   Widget build(BuildContext context) {
 
-    return Center(
-      child: GestureDetector(
-        onTap: () {
-          setState(() {
-            if(v_width == 200) {
-              v_color = Colors.amber;
-              v_width = 100;
-              v_height = 200;
-            }
-            else {
-              v_color = Colors.yellow;
-              v_width = 200;
-              v_height = 100;
-            }
-
-          });
-        },
-        child: AnimatedContainer(
-          duration: Duration(seconds: 1),
-          width: v_width,
-          height: v_height,
-          color: v_color,
-        ),
-      )
+    return CustomPaint(
+      painter: PainterTest(_animation.value),
+      size: MediaQuery.of(context).size,
     );
   }
 }
