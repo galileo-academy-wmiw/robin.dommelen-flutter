@@ -4,6 +4,7 @@ import "library.dart" as lib;
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:video_player/video_player.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const List<DropdownMenuItem<int>> listOptions = [
   DropdownMenuItem(child: Text("Large"), value: 200,),
@@ -13,7 +14,7 @@ const List<DropdownMenuItem<int>> listOptions = [
 
 final AudioPlayer audioPlayer = AudioPlayer();
 
-void main() => runApp(MyInherited(child: const AppRoot()));
+void main() => runApp(const AppRoot());
 
 class AppRoot extends StatelessWidget {
   const AppRoot({Key? key}) : super(key: key);
@@ -42,26 +43,12 @@ class AppTree extends StatefulWidget {
 
 class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
 
-  String _textOnScreen = "";
-
+  int _ivalue = 0;
+  
   @override
   void initState() {
     super.initState();
-
-    lib.textStream.stream.listen((text) {
-      setState(() {
-        _textOnScreen = text;
-      });
-    });
-
-    Timer(Duration(seconds: 3), () {
-      setState(() {
-        MyInherited.of(context).blueText = TextStyle(
-          color: Colors.red,
-          fontSize: 40
-        );
-      });
-    });
+    //load("name").then((value) => _ivalue = value);
   }
 
   @override
@@ -71,42 +58,40 @@ class _AppTreeState extends State<AppTree> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          child: Text("Hello World", style: MyInherited.of(context).blueText),
-        ),
-        Container(
-          child: Text(_textOnScreen, style: lib.testStyle),
-        ),
-      ],
+    return FutureBuilder<int>(
+      future: load("name"),
+      builder: (context, snapshot) {
+        _ivalue = snapshot.data ?? 0;
+        if(snapshot.connectionState == ConnectionState.waiting) return Container(child: Text("Waiting..."),);
+        return Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(_ivalue.toString()),
+              FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    _ivalue++;
+                    save("name", _ivalue);
+                  });
+                },
+                child: Icon(Icons.add),
+              )
+            ],
+          ),
+        );
+      }
     );
   }
-}
 
-class MyInherited extends InheritedWidget {
-  MyInherited({
-    Key? key,
-    required Widget child,
-  }) : super(key: key, child: child);
-
-  static MyInherited of(BuildContext context) {
-    final MyInherited? result = context.dependOnInheritedWidgetOfExactType<MyInherited>();
-    assert(result != null, 'No MyInherited found in context');
-    return result!;
+  Future<void> save(String name, int value) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt(name, value);
   }
 
-  @override
-  bool updateShouldNotify(MyInherited old) {
-    return true;
+  Future<int> load(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    final val = prefs.getInt(name);
+    return val ?? 0;
   }
-
-  TextStyle blueText = TextStyle(
-    color: Colors.blue,
-    fontFamily: "TiltWarp",
-    letterSpacing: 1.2,
-    fontSize: 14,
-    fontWeight: FontWeight.bold,
-  );
-
 }
