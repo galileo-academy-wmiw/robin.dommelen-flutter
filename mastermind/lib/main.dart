@@ -9,7 +9,11 @@ import "screen_score.dart";
 
 import "game_controller.dart";
 
-void main() => runApp(const AppRoot());
+void main() {
+  GameController.newGame();
+
+  runApp(const AppRoot());
+}
 
 class AppRoot extends StatelessWidget {
   const AppRoot({Key? key}) : super(key: key);
