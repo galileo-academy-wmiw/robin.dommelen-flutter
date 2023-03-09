@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 import "screen_game.dart";
@@ -20,6 +21,7 @@ class AppRoot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
     return MaterialApp(
       theme: ThemeData.light(),
@@ -27,9 +29,9 @@ class AppRoot extends StatelessWidget {
       home: DefaultTabController(
         length: 4,
         child: Scaffold(
-            appBar: AppBar(
+            /*appBar: AppBar(
                 title: const Text("Mastermind!")
-            ),
+            ),*/
             body: TabBarView(
               children: [
                 ScreenStart(),

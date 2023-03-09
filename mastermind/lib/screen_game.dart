@@ -29,12 +29,14 @@ class CodePinPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return (oldDelegate as CodePinPainter).pinColorCode != pinColorCode;
   }
 
 }
 
-class WidgetResultPin extends StatefulWidget {
+// ----- Game Widgets -----
+
+class WidgetResultPin extends StatelessWidget {
 
   final double _pinSize;
   final int _resultIndex;
@@ -43,41 +45,28 @@ class WidgetResultPin extends StatefulWidget {
   WidgetResultPin(this._pinSize, this._resultIndex, this._resultPinIndex);
 
   @override
-  State<WidgetResultPin> createState() => _WidgetResultPinState();
-}
-
-class _WidgetResultPinState extends State<WidgetResultPin> {
-
-  @override
   Widget build(BuildContext context) {
 
-    int color = GameController.getColorCodeForResultPin(widget._resultIndex,
-        widget._resultPinIndex);
+    int color = GameController.getColorCodeForResultPin(_resultIndex,
+        _resultPinIndex);
 
     return SizedBox(
-      width: widget._pinSize,
-      height: widget._pinSize,
+      width: _pinSize,
+      height: _pinSize,
       child: CustomPaint(
         painter: CodePinPainter(color),
-        size: Size(widget._pinSize, widget._pinSize),
+        size: Size(_pinSize, _pinSize),
       )
     );
   }
 }
 
-
-class WidgetResultCodePin extends StatefulWidget {
+class WidgetResultCodePin extends StatelessWidget {
 
   final int _resultIndex;
   final int _pinIndex;
 
   WidgetResultCodePin(this._resultIndex, this._pinIndex);
-
-  @override
-  State<WidgetResultCodePin> createState() => _WidgetResultCodePinState();
-}
-
-class _WidgetResultCodePinState extends State<WidgetResultCodePin> {
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +75,7 @@ class _WidgetResultCodePinState extends State<WidgetResultCodePin> {
     double screenWidth = screenSize.width;
     double effectiveWidth = screenWidth * 0.2;
     int colorCode = GameController.getColorCodeForResultCodePin(
-        widget._resultIndex, widget._pinIndex);
+        _resultIndex, _pinIndex);
 
     return SizedBox(
       width: effectiveWidth,
@@ -99,20 +88,11 @@ class _WidgetResultCodePinState extends State<WidgetResultCodePin> {
   }
 }
 
-
-// ----- Game Widgets -----
-
-class WidgetResultRow extends StatefulWidget {
+class WidgetResultRow extends StatelessWidget {
 
   final int _resultIndex;
 
   WidgetResultRow(this._resultIndex);
-
-  @override
-  State<WidgetResultRow> createState() => _WidgetResultRowState();
-}
-
-class _WidgetResultRowState extends State<WidgetResultRow> {
 
   @override
   Widget build(BuildContext context) {
@@ -124,19 +104,19 @@ class _WidgetResultRowState extends State<WidgetResultRow> {
     return Row(
       children: [
         for(int i = 0; i < GameController.getNumberOfPins(); i++)
-          WidgetResultCodePin(widget._resultIndex, i),
+          WidgetResultCodePin(_resultIndex, i),
         Column(
           children: [
             Row(
               children: [
-                WidgetResultPin(effectiveWidth * 0.5, widget._resultIndex, 0),
-                WidgetResultPin(effectiveWidth * 0.5, widget._resultIndex, 1),
+                WidgetResultPin(effectiveWidth * 0.5, _resultIndex, 0),
+                WidgetResultPin(effectiveWidth * 0.5, _resultIndex, 1),
               ],
             ),
             Row(
               children: [
-                WidgetResultPin(effectiveWidth * 0.5, widget._resultIndex, 2),
-                WidgetResultPin(effectiveWidth * 0.5, widget._resultIndex, 3),
+                WidgetResultPin(effectiveWidth * 0.5, _resultIndex, 2),
+                WidgetResultPin(effectiveWidth * 0.5, _resultIndex, 3),
               ]
             )
           ],
@@ -146,18 +126,11 @@ class _WidgetResultRowState extends State<WidgetResultRow> {
   }
 }
 
-
-class WidgetControlCodePin extends StatefulWidget {
+class WidgetControlCodePin extends StatelessWidget {
 
   final int _pinIndex;
 
   WidgetControlCodePin(this._pinIndex);
-
-  @override
-  State<WidgetControlCodePin> createState() => _WidgetControlCodePinState();
-}
-
-class _WidgetControlCodePinState extends State<WidgetControlCodePin> {
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +138,7 @@ class _WidgetControlCodePinState extends State<WidgetControlCodePin> {
     Size screenSize = MediaQuery.of(context).size;
     double screenWidth = screenSize.width;
     double effectiveWidth = screenWidth * 0.2;
-    int colorCode = GameController.getColorCodeForControlPin(widget._pinIndex);
+    int colorCode = GameController.getColorCodeForControlPin(_pinIndex);
 
     return SizedBox(
       width: effectiveWidth,
@@ -177,8 +150,6 @@ class _WidgetControlCodePinState extends State<WidgetControlCodePin> {
     );
   }
 }
-
-
 
 class WidgetInputCodePin extends StatefulWidget {
 
@@ -250,6 +221,7 @@ class _ScreenGameState extends State<ScreenGame> {
           // Results row
           Expanded(
             child: ListView(
+              reverse: true,
               shrinkWrap: true,
               children: [
                 Column(

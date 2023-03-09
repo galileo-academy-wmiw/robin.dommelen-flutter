@@ -73,7 +73,7 @@ class GameInstance {
   }
 
   void addInputAsResult(List<data.PinColor> result) {
-    _results.add(EntryInputResult(inputColors: _input, resultColors: result));
+    _results.add(EntryInputResult(inputColors: List.from(_input), resultColors: result));
   }
 
   void clearControl() {
@@ -100,5 +100,4 @@ class GameInstance {
   EntryInputResult getResultEntry(int index) {
     return _results[index];
   }
-
 }

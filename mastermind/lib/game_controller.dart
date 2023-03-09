@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'game_instance.dart';
 import 'game_data.dart' as data;
 
@@ -35,8 +33,18 @@ class GameController {
       _gameState = GameState.success;
     }
     else {
-      _gameInstance.clearInput();
+      //_gameInstance.clearInput();
     }
+  }
+
+  static int getNumberOfPins() {
+    return _gameInstance.pinCount;
+  }
+
+  static get gameState => _gameState;
+
+  static int getNumberOfResults() {
+    return _gameInstance.getResultEntryCount();
   }
 
   static int getColorCodeForInputPin(int index) {
@@ -52,20 +60,9 @@ class GameController {
     return data.pinColorCodes[pinColor.index];
   }
 
-  static int getNumberOfPins() {
-    return _gameInstance.pinCount;
-  }
-
-  static get gameState => _gameState;
-
-  static int getNumberOfResults() {
-    return _gameInstance.getResultEntryCount();
-  }
-
   static int getColorCodeForResultCodePin(int resultIndex, int pinIndex) {
     data.PinColor pinColor =  _gameInstance.getResultEntry(resultIndex)
         .inputColors[pinIndex];
-    print(pinColor);
     return data.pinColorCodes[pinColor.index];
   }
 
