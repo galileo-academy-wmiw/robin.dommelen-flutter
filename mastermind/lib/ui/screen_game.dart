@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-import 'game_controller.dart';
+import '../core/game_controller.dart';
 
 // ---- Game Painter -----
 class CodePinPainter extends CustomPainter {

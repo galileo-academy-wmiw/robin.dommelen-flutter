@@ -1,5 +1,5 @@
-import 'game_instance.dart';
-import 'game_data.dart' as data;
+import '../game/game_instance.dart';
+import '../game/game_data.dart' as data;
 
 enum GameState {
   uninitialized, playing, gameOver, success
@@ -7,8 +7,13 @@ enum GameState {
 
 class GameController {
 
-  static final GameInstance _gameInstance = GameInstance();
+  static late final GameInstance _gameInstance;
   static GameState _gameState = GameState.uninitialized;
+
+  static void initialize() {
+    _gameInstance = GameInstance();
+    newGame();
+  }
 
   static void newGame() {
     _gameInstance.createNewCode();
