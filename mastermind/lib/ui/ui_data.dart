@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 
-import "screen_start.dart";
-import "screen_game.dart";
-import "screen_rules.dart";
-import "screen_score.dart";
-
 enum EnumUiState {
-  undefined, homeScreen, gameScreen, scoreScreen, rulesScreen
+  undefined, homeScreen, gameScreen, scoreScreen, rulesScreen, settingsScreen, resultScreen
 }
 
 class UiState {
@@ -18,6 +13,9 @@ class UiState {
 
   bool _hasHomeScreenButton = false;
   String _homeScreenButtonText = "";
+
+  bool _hasCallbackFunc = false;
+  late Function() _callbackFunction;
 
   UiState.undefined() {
     _state = EnumUiState.undefined;
@@ -32,10 +30,18 @@ class UiState {
   Widget get screenRoot => _screenUi;
   bool get hasHomeScreenButton => _hasHomeScreenButton;
   String get homeScreenButtonText => _homeScreenButtonText;
+  bool get hasCallbackFunction => _hasCallbackFunc;
+  Function() get callbackFunction => _callbackFunction;
 
   UiState enableHomeScreenButton(String text) {
     _hasHomeScreenButton = true;
     _homeScreenButtonText = text;
+    return this;
+  }
+
+  UiState setCallbackFunction(Function() func) {
+    _hasCallbackFunc = true;
+    _callbackFunction = func;
     return this;
   }
 
@@ -45,5 +51,7 @@ class UiState {
   static late UiState stateGameScreen;
   static late UiState stateScoreScreen;
   static late UiState stateRulesScreen;
+  static late UiState stateSettingsScreen;
+  static late UiState stateGameRulesScreen;
 
 }

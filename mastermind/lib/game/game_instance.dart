@@ -13,12 +13,6 @@ class GameInstance {
 
   final int _pinCount = 4;
 
-  // Index values of the results pin colors corresponding with the
-  // data.resultPinValues array
-  static const int _iResultColorCorrect = 2;
-  static const int _iResultColorPartialCorrect = 1;
-  static const int _iResultColorWrong = 0;
-
   late List<data.PinColor> _controlCode;
   late List<data.PinColor> _input;
   late List<EntryInputResult> _results;
@@ -43,7 +37,7 @@ class GameInstance {
 
   List<data.PinColor> compareCode() {
     List<data.PinColor> result = List.generate(_pinCount, (index) =>
-      data.resultPinValues[_iResultColorWrong]);
+      data.resultPinValues[data.iResultColorWrong]);
 
     for (int i = 0; i < _controlCode.length; i++) {
       data.PinColor target = _controlCode[i];
@@ -51,10 +45,10 @@ class GameInstance {
       for (int j = 0; j < _input.length; j++) {
         if (target == _input[j]) {
           if (i == j) {
-            result[i] = data.resultPinValues[_iResultColorCorrect];
+            result[i] = data.resultPinValues[data.iResultColorCorrect];
             break;
           } else {
-            result[i] = data.resultPinValues[_iResultColorPartialCorrect];
+            result[i] = data.resultPinValues[data.iResultColorPartialCorrect];
           }
         }
       }
@@ -64,8 +58,12 @@ class GameInstance {
     return result;
   }
 
-  void cycleInput(int index) {
+  void cycleInputNext(int index) {
     _input[index] = data.nextCodePin[_input[index].index];
+  }
+
+  void cycleInputPrev(int index) {
+    _input[index] = data.prevCodePin[_input[index].index];
   }
 
   bool evaluateResult(List<data.PinColor> result) {

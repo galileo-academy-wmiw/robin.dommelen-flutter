@@ -1,9 +1,11 @@
-import 'core/game_controller.dart';
-import 'core/ui_controller.dart';
-import 'core/app_controller.dart';
+import 'common/game_controller.dart';
+import 'common/ui_controller.dart';
+import 'common/app_controller.dart';
+import 'common/audio_controller.dart';
 
 void main() {
   GameController.initialize();
   AppController.initialize();
   UiController.initialize();
+  AudioController.initialize();
 }

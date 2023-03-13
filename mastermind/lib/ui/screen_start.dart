@@ -2,7 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:mastermind/core/ui_controller.dart';
+import 'package:mastermind/common/ui_controller.dart';
+import 'package:mastermind/common/audio_controller.dart';
+import 'package:mastermind/ui/ui_widgets.dart';
 
 import "ui_data.dart";
 
@@ -34,7 +36,7 @@ class _ScreenStartState extends State<ScreenStart> with TickerProviderStateMixin
     _animation.addListener(() {setState(() {});});
     _animationController.forward();
 
-    Timer timer = Timer(const Duration(seconds: 3), () => {
+    Timer(const Duration(seconds: 3), () => {
       _buttonOpacity = 1.0
     });
   }
@@ -53,10 +55,12 @@ class _ScreenStartState extends State<ScreenStart> with TickerProviderStateMixin
     List<Widget> buttons = [];
 
     for(int i = 0; i < UiState.values.length; i++) {
-      UiState state = UiState.values[i]!;
+      UiState state = UiState.values[i];
       if(state.hasHomeScreenButton) {
         Widget buttonWidget = GestureDetector(
           onTapDown: (details) {
+            AudioController.playButtonSound();
+            if(state.hasCallbackFunction) state.callbackFunction();
             setState(() {
               UiController.setScreenState(context, state.state);
             });
@@ -73,7 +77,9 @@ class _ScreenStartState extends State<ScreenStart> with TickerProviderStateMixin
                   child: Container(
                     width: 150,
                     height: 50,
-                    child: Center(child: Text(state.homeScreenButtonText)),
+                    child: Center(
+                        child: Text(state.homeScreenButtonText)
+                    ),
                   )
               ),
             ),
@@ -89,44 +95,50 @@ class _ScreenStartState extends State<ScreenStart> with TickerProviderStateMixin
       children: buttons,
     );
 
-    return DecoratedBox(
-        decoration: const BoxDecoration(
-          image: DecorationImage(image: AssetImage("assets/img/sky.jpg"), fit: BoxFit.cover)
-        ),
-      child: Column(
-        children: [
-          Center(
-            child: Transform(
-              alignment: FractionalOffset.topCenter,
-              transform: identity * Matrix4.rotationX(sin(_animation.value) * (animationMax - _animation.value) * 0.065),
-              child: Stack(
-                children: [
-                  Image(
-                    width: 200,
-                    height: 200,
-                    image: AssetImage("assets/img/sign.png"),
-                    fit: BoxFit.fill,
-                  ),
-                  Positioned(
-                    left: 32,
-                    top: 150,
-                    child: Text("Mastermind",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold
-                      ),
-                    )
-                  ),
-                ],
+    return Stack(
+      children: [
+        Column(
+          children: [
+            Center(
+              child: Transform(
+                alignment: FractionalOffset.topCenter,
+                transform: identity * Matrix4.rotationX(sin(_animation.value) * (animationMax - _animation.value) * 0.065),
+                child: Stack(
+                  children: [
+                    Image(
+                      width: 200,
+                      height: 200,
+                      image: AssetImage("assets/img/sign.png"),
+                      fit: BoxFit.fill,
+                    ),
+                    Positioned(
+                      left: 32,
+                      top: 150,
+                      child: Text("Mastermind",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold
+                        ),
+                      )
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
 
-          Expanded(
-            child: buttonColumn
-          )
-        ],
-      )
+            Expanded(
+              child: buttonColumn
+            )
+          ],
+        ),
+        Positioned(
+            top: MediaQuery.of(context).size.height - 70,
+            left: MediaQuery.of(context).size.width - 70,
+            child: WidgetSquareButton(Icons.settings, 60, () => {
+              UiController.setScreenState(context, EnumUiState.settingsScreen)
+            })
+        )
+      ],
     );
   }
 }
