@@ -153,7 +153,7 @@ class _WidgetControlRowState extends State<WidgetControlRow> with TickerProvider
           children: [
             for(int i = 0; i < GameController.getNumberOfPins(); i++)
               Opacity(
-                opacity: clampDouble(_fadeAnimation.value - i, 1.0, 1.0),
+                opacity: clampDouble(_fadeAnimation.value - i, 0.0, 1.0),
                 child: WidgetCodePin(widget._pinSize, GameController.getControlPinColor(i, false), drawAccessibility: true,),
               )
           ],
