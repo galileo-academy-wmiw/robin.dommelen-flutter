@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:mastermind/common/audio_controller.dart';
 import 'package:mastermind/common/game_controller.dart';
 
 import '../ui/screen_score.dart';
@@ -10,7 +11,25 @@ import '../ui/screen_result.dart';
 import '../ui/screen_settings.dart';
 import '../ui/ui_data.dart';
 
-class AppRoot extends StatelessWidget {
+class AppRoot extends StatefulWidget {
+
+  @override
+  State<AppRoot> createState() => _AppRootState();
+}
+
+class _AppRootState extends State<AppRoot> {
+
+  @override
+  void initState() {
+    super.initState();
+    AudioController.initialize();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    AudioController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

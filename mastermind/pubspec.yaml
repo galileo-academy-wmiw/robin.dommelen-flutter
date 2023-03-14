@@ -83,6 +83,9 @@ flutter:
     - assets/img/shape_5.png
     - assets/img/shape_6.png
 
+    - assets/img/rules_0.png
+    - assets/img/rules_1.png
+
     - assets/sfx/button.wav
     - assets/sfx/button_pitched.wav
     - assets/sfx/ambient.mp3
